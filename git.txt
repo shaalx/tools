@@ -1,0 +1,20 @@
+touch README.md
+git init
+git add .
+git commit -a
+git remote add first https://github.com/zhuulx/love.git
+git push -u first master
+
+
+git pull first
+
+
+git branch
+
+git checkout zhuulx
+//...
+git checkout master
+git merge zhuulx
+git branch -d zhuulx
+(git branch -D zhuulx)
+git push first master
