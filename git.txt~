@@ -1,4 +1,4 @@
-﻿touch README.md
+touch README.md
 git init
 git add .
 git commit -a
@@ -79,32 +79,3 @@ git push first master
     $ git push <remote> :<branch/tag-name> #删除远程分支或标签
     $ git push --tags #上传所有标签
 
-https://gitcafe.com/GitCafe/Help/wiki/Git-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8#wiki
-
-
-Git push
-$ git push origin test:master         // 提交本地test分支作为远程的master分支
-$ git push origin test:test              // 提交本地test分支作为远程的test分支
-如果想删除远程的分支呢？类似于上面，如果:左边的分支为空，那么将删除:右边的远程的分支。
- 
-$ git push origin :test              // 刚提交到远程的test将被删除，但是本地还会保存的，不用担心。
-获得密钥：
-
-ssh-keygen -t rsa -C "defnngj@gmail.com"//填写email地址，然后一直“回车”ok
-打开本地..\.ssh\id_rsa.pub文件。此文件里面内容为刚才生成人密钥。
-
-4. 登陆github系统。点击右上角的 Account Settings--->SSH Public keys ---> add another public keys
-
-把你本地生成的密钥复制到里面（key文本框中）， 点击 add key 就ok了
-
-5. 接着打开git ，测试连接是否成功
-
-$ ssh -T git@github.com
-如果提示：Hi defnngj You've successfully authenticated, but GitHub does not provide shell access. 说明你连接成功了
-
-6. 设置用户信息：
-
-6.1
-
-$ git config --global user.name "defnngj"//给自己起个用户名
-$ git config --global user.email  "defnngj@gmail.com"//填写自己的邮箱
