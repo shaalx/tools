@@ -4,7 +4,7 @@
 Package oauth2 is a brief RESTful API design for signin using weibo,qq or wechat account.
 
 oauth2抽象了第三方认证登录的开发过程，整个认证过程对开发者和用户完全透明，使用本包，可以让您的认证登录更简单。
-------------------------------------------------
+
 #特点
 1. 低耦合。不依赖第三方包，完全使用golang标准库开发。
 2. 易扩展。定义了统一接口，扩展性强。
@@ -12,7 +12,7 @@ oauth2抽象了第三方认证登录的开发过程，整个认证过程对开�
 #signin 功能说明
 用户调用该接口，需使用第三方账号（weibo，qq，微信）授权登录，接口返回登录账号的基本信息。
 
-*  注意事项：需要登录账号的授权，本授权仅获取用户的基本信息，不用于其它用途。授权成功后，可使用该账号使用我们的服务。
+*  **注意事项：** 需要登录账号的授权，本授权仅获取用户的基本信息，不用于其它用途。授权成功后，可使用该账号使用我们的服务。
 
 ## 接口调用说明
 ###URL格式
@@ -39,9 +39,19 @@ json
 
        ` {
         "error_code":0,
+
         "msg":"",
+
+
         "nickname":"Peter",
+
+
+
         "figureurl":"http://qzapp.qlogo.cn/qzapp/111111/942FEA70050EEAFBD4DCE2C1FC775E56/30",
+
+
+
+        
         "figureurl_1":"http://qzapp.qlogo.cn/qzapp/111111/942FEA70050EEAFBD4DCE2C1FC775E56/50",
         "figureurl_2":"http://qzapp.qlogo.cn/qzapp/111111/942FEA70050EEAFBD4DCE2C1FC775E56/100",
         "figureurl_qq_1":"http://q.qlogo.cn/qqapp/100312990/DE1931D5330620DBD07FB4A5422917B6/40",
