@@ -37,14 +37,15 @@ json
 认证成功后，返回用户第三方账号的基本信息。
 * 正确返回结果示例
 
-
-
-
        ` {
         "error_code":0,
+
         "msg":"",
+
         "nickname":"Peter",
+
         "figureurl":"http://qzapp.qlogo.cn/qzapp/111111/942FEA70050EEAFBD4DCE2C1FC775E56/30",
+
         "figureurl_1":"http://qzapp.qlogo.cn/qzapp/111111/942FEA70050EEAFBD4DCE2C1FC775E56/50",
         "figureurl_2":"http://qzapp.qlogo.cn/qzapp/111111/942FEA70050EEAFBD4DCE2C1FC775E56/100",
         "figureurl_qq_1":"http://q.qlogo.cn/qqapp/100312990/DE1931D5330620DBD07FB4A5422917B6/40",
@@ -63,6 +64,9 @@ json
 
        ` {
         "error_code":1,
+
+
+        
         "msg":"auth failed."
         }`
 
