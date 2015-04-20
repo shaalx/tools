@@ -2,7 +2,6 @@
 ================
 
 Package signin is a brief RESTful API design for signin using weibo,qq or wechat account.
-
 signin抽象了第三方认证登录的开发过程，整个认证过程对开发者和用户完全透明，使用本包，可以让您的认证登录更简单。
 
 #特点
@@ -62,6 +61,7 @@ json
 	        "error_code":1,
 	        "msg":"auth failed."
         }`
-
+##[About us](http://h2object.io/about.md)
+有任何疑问，请联系[我们](http://h2object.io/about.md)。
 ##License
 MIT
