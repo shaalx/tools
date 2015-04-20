@@ -1,7 +1,7 @@
 [H2O](http://h2object.io) oauth2
 ================
 
-Package oauth2 is a brief RESTful API design for signin using weibo, qq, wechat account.
+Package oauth2 is a brief RESTful API design for signin using weibo,qq or wechat account.
 oauth2抽象了第三方认证登录的开发过程，整个认证过程对开发者和用户完全透明，使用本包，可以让您的认证登录更简单。
 
 #特点
