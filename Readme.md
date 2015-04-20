@@ -22,21 +22,23 @@ GET
 json
 ###请求示例
 ####微博
-http://h2object.io:80/auth/weibo/signin
+`http://h2object.io:80/auth/weibo/signin`
 ####QQ
-http://h2object.io:80/auth/weibo/signin
+`http://h2object.io:80/auth/weibo/signin`
 ####微信
-http://h2object.io:80/auth/wechat/signin
+`http://h2object.io:80/auth/wechat/signin`
 
 ###返回参数说明
 
-1.  error_code    错误代码，详见[错误代码说明](http://h2object.io)
+1.  error_code    错误代码，详见[错误代码说明](http://h2object.io)。
 
 2. msg  备注消息
 
 ####认证成功
 认证成功后，返回用户第三方账号的基本信息。
 * 正确返回结果示例
+
+
 	       ` {
 	        "error_code":0,
 	        "msg":"",
@@ -58,6 +60,8 @@ http://h2object.io:80/auth/wechat/signin
 ####认证失败
 认证失败，返回错误代码以及备注消息。
 * 错误返回结果
+
+
        ` {
         "error_code":1,
         "msg":"auth failed."
