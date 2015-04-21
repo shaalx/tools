@@ -100,7 +100,7 @@ ssh-keygen -t rsa -C "defnngj@gmail.com"//填写email地址，然后一直“回
 5. 接着打开git ，测试连接是否成功
 
 $ ssh -T git@github.com
-如果提示：Hi defnngj You've successfully authenticated, but GitHub does not provide shell access. 说明你连接成功了
+如果提示：Hi defnngj You've successfully authenticated, but GitHub does not provide shell access. 说明你连接成功了.
 
 6. 设置用户信息：
 
