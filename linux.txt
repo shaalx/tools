@@ -1,0 +1,2 @@
+killall -9 h2o.linux
+ps -aux|grep h2o
