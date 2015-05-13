@@ -1,0 +1,605 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+<head>
+	#parse("inc/include.vm")
+	#parse("inc/page.vm")
+	#parse("inc/commonPage2.vm")
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" type="text/css" href="$!{ctxtPath}/res/css/012/common.css" />
+	<link rel="stylesheet" type="text/css" href="$!{ctxtPath}/res/css/010/showTestpaper.css" />
+	<script type="text/javascript" src="$!{ctxtPath}/res/js/page.js"></script>
+	<script type="text/javascript" src="$!{ctxtPath}/res/js/010/showTestpaper.js"></script>
+	<script type="text/javascript">
+		function downloadOper(act, address, fileName){
+			$('#operAddress').attr("value",address);
+			$('#operFileName').attr("value",fileName);
+			$('#downloadOperAddress').attr("action",act);
+			$('#downloadOperAddress').submit();
+		}
+		jQuery(function($) {
+    		$("#delete").click(function() {
+				var delids = "";
+				var checkboxes = [];
+				checkboxes = $('[name="datacheck"]:checked');
+				checkboxes.each(function() {
+					delids = delids + $(this).attr("id") + ",";
+				});
+				if (delids.length == 0) {
+					alert("$!{deleteErrorMessage}");
+					return;
+				}
+				delids = delids.substring(0, delids.length - 1);
+				if (confirm("$!{deleteConfirmMessage}")) {
+					$('#qdataids').attr("value", delids);
+					$('#show').attr("action", "show/delete");
+					$('#show').submit();
+				}
+			});
+			#parse("inc/selectCourseJquery.vm")
+		});
+	</script>
+	<title>$!{pageName}</title>
+</head>
+<body>
+<form id="downloadOperAddress" name="downloadOperAddress" method="post">
+	<input name="operAddress" type="text" id="operAddress" value="" style="display:none;"/>
+	<input name="operFileName" type="text" id="operFileName" value="" style="display:none;"/>
+</form>
+<div style="height:50px; width:100%; text-align: right;font-size:40px;">
+	#commonPage2()
+</div>
+
+## 只读标记
+#if($readOnly)
+<input id="readOnly" type="hidden" value="$!{readOnly}" />
+#end
+
+## 乱序的确认消息
+<input id="disruptConfirmMessage" type="hidden" value="$!{disruptConfirmMessage}" />
+
+## 试卷在使用中的消息
+#if($hasBeenUsingMessage)
+<input id="hasBeenUsingMessage" type="hidden" value="$!{hasBeenUsingMessage}" />
+#end
+
+## 乱序成功的消息
+#if($hasDisruptSuccessMessage)
+<input id="disruptSuccessMessage" type="hidden" value="$!{disruptSuccessMessage}" />
+#end
+
+## 乱序失败的消息
+#if($hasDisruptFailedMessage)
+<input id="disruptFailedMessage" type="hidden" value="$!{disruptFailedMessage}" />
+#end
+
+## 保存输入的确认消息
+<input id="updateConfirmMessage" type="hidden" value="$!{updateConfirmMessage}" />
+
+## 保存输入成功的消息
+#if($hasUpdateSuccessMessage)
+<input id="updateSuccessMessage" type="hidden" value="$!{updateSuccessMessage}" />
+#end
+
+## 保存输入失败的消息
+#if($hasUpdateFailedMessage)
+<input id="updateFailedMessage" type="hidden" value="$!{updateFailedMessage}" />
+#end
+
+## 删除的确认消息
+<input id="deleteConfirmMessage" type="hidden" value="$!{deleteConfirmMessage}" />
+
+## 删除成功的消息
+#if($hasDeleteSuccessMessage)
+<input id="deleteSuccessMessage" type="hidden" value="$!{deleteSuccessMessage}" />
+#end
+
+## 删除失败的消息
+#if($hasDeleteFailedMessage)
+<input id="deleteFailedMessage" type="hidden" value="$!{deleteFailedMessage}" />
+#end
+
+## 返回的提示消息
+<input id="backConfirmMessage" type="hidden" value="$!{backConfirmMessage}" />
+
+<form id="show" action="" method="post">
+
+## 试卷ID
+<input name="testpaperId" type="hidden" value="$!{testpaperId}" />
+
+## 试卷名
+<table width="95%" align="center">
+	<tr>
+		<td width="30%"></td>
+		<td>
+			<label class="errorMessage">*</label>
+			<input id="testpaperName" name="testpaperName" class="tdCenter" type="text" style="width:500px" value="$!{escapeTool.html($!{testpaperInfo.TPNAME})}" maxlength="40" />
+		</td>
+		## 试卷名的长度超出范围时显示错误信息
+		#if($hasTestpaperNameW0010003)
+		<td width="30%" id="testpaperNameW0010003" class="errorMessage">$!{testpaperNameW0010003}</td>
+		#end
+		## 试卷名为空时显示错误信息
+		#if($hasTestpaperNameW0010006)
+		<td width="30%" id="testpaperNameW0010006" class="errorMessage">$!{testpaperNameW0010006}</td>
+		#end
+	</tr>
+</table>
+
+## 返回画面
+<input name="from" type="hidden" value="$!{from}" />
+
+<input type="hidden" id="qdataids" name="qdataids" value="" />
+
+## 总分，按键
+<table width="95%" align="center">
+	<tr class="blankLine">
+		<td width="50%"></td>
+		<td width="10%"></td>
+		<td width="10%"></td>
+		<td width="10%"></td>
+		<td width="10%"></td>
+		<td width="10%"></td>
+	</tr>
+	<tr>
+		<td>总分：$!{testpaperInfo.TOTALSCORE}</td>
+		<td class="tdRight"><input id="disrupt" type="button" value="乱序" /></td>
+		<td class="tdRight"><input id="insert" type="button" value="追加" /></td>
+		<td class="tdRight"><input id="update" type="button" value="保存输入" /></td>
+		<td class="tdRight"><input id="delete" type="button" value="删除" /></td>
+		<td class="tdRight"><input id="back" type="button" value="返回" /></td>
+	</tr>
+	<tr><td class="blankLine"></td></tr>
+</table>
+<hr />
+
+<table width="95%" align="center">
+	<tr>
+		<td width="3%"></td>
+		<td width="2%"></td>
+		<td width="5%"></td>
+		<td id="imgWidth" width="70%"></td>
+		<td width="20%"></td>
+	</tr>
+</table>
+## 题目部分
+<table width="95%" align="center">
+	<tr class="blankLine">
+		<td width="3%"></td>
+		<td width="2%"></td>
+		<td width="5%"></td>
+		<td width="70%"></td>
+		<td width="20%"></td>
+	</tr>
+## 单选题
+#if($singleChoiceNumber)
+	<tr>
+		<td>$!{singleChoiceNumber}、</td>
+		<td colspan="3">单选题（$!{testpaperInfo.NUMOFSCQS}道题，共$!{singleChoiceScore}分）</td>
+		<td>
+			<label class="errorMessage">*</label>
+			分值：<input id="questionScore1" name="questionScore1" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFSCQS}" maxlength="3" />
+			## 分值为空时显示错误信息
+			#if($hasQuestionScore1W0010006)
+			<label id="questionScore1W0010006" class="errorMessage">$!{questionScoreW0010006}</label>
+			#end
+			## 分值不是数字时显示错误信息
+			#if($hasQuestionScore1W0010008)
+			<label id="questionScore1W0010008" class="errorMessage">$!{questionScoreW0010008}</label>
+			#end
+			## 分值小于0时显示错误信息
+			#if($hasQuestionScore1W0010017)
+			<label id="questionScore1W0010017" class="errorMessage">$!{questionScoreW0010017}</label>
+			#end
+		</td>
+	</tr>
+	#set($index = 1)
+	#foreach($singleChoice in $singleChoiceList)
+	<tr><td class="blankLine"></td></tr>
+	<tr valign="top">
+		<td class="tdRight"><input type="checkbox" name="datacheck" id="01$!{singleChoice.QSID}" style="border:0" /></td>
+		<td>$!{index}.</td>
+		<td colspan="3">$!{escapeTool.html($!{singleChoice.QSDESC})}</td>
+	</tr>
+	<tr>
+		<td class="blankLine10"></td>
+		<td></td>
+		<td></td>
+		#if($singleChoice.REFPIC)
+		<td><img class="imgQuestion" src="$!{ctxtPath}/quesImport/open?id=$!{singleChoice.REFPIC}" /></td>
+		##else
+		##<td class="blankLine10"></td>
+		#end
+	</tr>
+
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td valign="top">A.</td>
+		<td colspan="2">$!{escapeTool.html($!{singleChoice.OPTIONA})}</td>
+	</tr>
+
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td valign="top">B.</td>
+		<td colspan="2">$!{escapeTool.html($!{singleChoice.OPTIONB})}</td>
+	</tr>
+
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td valign="top">C.</td>
+		<td colspan="2">$!{escapeTool.html($!{singleChoice.OPTIONC})}</td>
+	</tr>
+
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td valign="top">D.</td>
+		<td colspan="2">$!{escapeTool.html($!{singleChoice.OPTIOND})}</td>
+	</tr>
+
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td valign="top">知识点：</td>
+		<td colspan="2">$!{escapeTool.html($!{singleChoice.KNOWLEDGENM})}</td>
+	</tr>
+
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>序号：</td>
+		<td><input style="width:60px;" id="question1_" name="question1_" class="questionIndex" type="text" value="" maxlength="3" /></td>
+	</tr>
+
+	#set($index = $index + 1)
+	#end
+#end
+
+## 多选题
+#if($multiChoiceNumber)
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td>$!{multiChoiceNumber}、</td>
+		<td colspan="3">多选题（$!{testpaperInfo.NUMOFMCQS}道题，共$!{multiChoiceScore}分）</td>
+		<td>
+			<label class="errorMessage">*</label>
+			分值：<input id="questionScore2" name="questionScore2" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFMCQS}" maxlength="3" />
+			## 分值为空时显示错误信息
+			#if($hasQuestionScore2W0010006)
+			<label id="questionScore2W0010006" class="errorMessage">$!{questionScoreW0010006}</label>
+			#end
+			## 分值不是数字时显示错误信息
+			#if($hasQuestionScore2W0010008)
+			<label id="questionScore2W0010008" class="errorMessage">$!{questionScoreW0010008}</label>
+			#end
+			## 分值小于0时显示错误信息
+			#if($hasQuestionScore2W0010017)
+			<label id="questionScore2W0010017" class="errorMessage">$!{questionScoreW0010017}</label>
+			#end
+		</td>
+	</tr>
+
+	#set($index = 1)
+	#foreach($multiChoice in $multiChoiceList)
+
+	## 题目内容
+	<tr><td class="blankLine"></td></tr>
+	<tr valign="top">
+		<td class="tdRight"><input type="checkbox" name="datacheck" id="02$!{multiChoice.QSID}" style="border:0" /></td>
+		<td>$!{index}.</td>
+		<td colspan="3">$!{escapeTool.html($!{multiChoice.QSDESC})}</td>
+	</tr>
+
+	## 图片
+	#if($multiChoice.REFPIC)
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><img class="imgQuestion" src="$!{ctxtPath}/quesImport/open?id=$!{multiChoice.REFPIC}" /></td>
+	</tr>
+	#end
+
+	## 多选题的选项
+	#foreach($choice in $multiChoice.choiceList)
+	<tr><td class="blankLine10"></td></tr>
+	<tr valign="top">
+		<td></td>
+		<td></td>
+		<td>$!{choice.OPTIONID}.</td>
+		<td colspan="2">$!{escapeTool.html($!{choice.OPTIONDESC})}</td>
+	</tr>
+	#end
+
+	## 知识点
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>知识点：</td>
+		<td colspan="2">$!{escapeTool.html($!{multiChoice.KNOWLEDGENM})}</td>
+	</tr>
+
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td valign="top">设置序号：</td>
+		<td colspan="2"><input id="question1_" name="question1_" class="questionIndex" type="text" value="" maxlength="3" /></td>
+	</tr>
+
+	#set($index = $index + 1)
+	#end
+#end
+
+## 判断题
+#if($judgeNumber)
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td>$!{judgeNumber}、</td>
+		<td colspan="3">判断题（$!{testpaperInfo.NUMOFJUDGEQS}道题，共$!{judgeScore}分）</td>
+		<td>
+			<label class="errorMessage">*</label>
+			分值：<input id="questionScore3" name="questionScore3" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFJUDGEQS}" maxlength="3" />
+			## 分值为空时显示错误信息
+			#if($hasQuestionScore3W0010006)
+			<label id="questionScore3W0010006" class="errorMessage">$!{questionScoreW0010006}</label>
+			#end
+			## 分值不是数字时显示错误信息
+			#if($hasQuestionScore3W0010008)
+			<label id="questionScore3W0010008" class="errorMessage">$!{questionScoreW0010008}</label>
+			#end
+			## 分值小于0时显示错误信息
+			#if($hasQuestionScore3W0010017)
+			<label id="questionScore3W0010017" class="errorMessage">$!{questionScoreW0010017}</label>
+			#end
+		</td>
+	</tr>
+
+	#set($index = 1)
+	#foreach($judge in $judgeList)
+
+	## 题目内容
+	<tr><td class="blankLine"></td></tr>
+	<tr valign="top">
+		<td class="tdRight"><input type="checkbox" name="datacheck" id="03$!{judge.QSID}" style="border:0" /></td>
+		<td>$!{index}.</td>
+		<td colspan="3">$!{escapeTool.html($!{judge.QSDESC})}</td>
+	</tr>
+
+	## 知识点
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>知识点：</td>
+		<td colspan="2">$!{escapeTool.html($!{judge.KNOWLEDGENM})}</td>
+	</tr>
+
+	#set($index = $index + 1)
+	#end
+#end
+
+## 填空题
+#if($fillinNumber)
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td>$!{fillinNumber}、</td>
+		<td colspan="3">填空题（$!{testpaperInfo.NUMOFFILLINQS}道题，共$!{fillinScore}分）</td>
+		<td>
+			<label class="errorMessage">*</label>
+			分值：<input id="questionScore4" name="questionScore4" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFFILLINQS}" maxlength="3" />
+			## 分值为空时显示错误信息
+			#if($hasQuestionScore4W0010006)
+			<label id="questionScore4W0010006" class="errorMessage">$!{questionScoreW0010006}</label>
+			#end
+			## 分值不是数字时显示错误信息
+			#if($hasQuestionScore4W0010008)
+			<label id="questionScore4W0010008" class="errorMessage">$!{questionScoreW0010008}</label>
+			#end
+			## 分值小于0时显示错误信息
+			#if($hasQuestionScore4W0010017)
+			<label id="questionScore4W0010017" class="errorMessage">$!{questionScoreW0010017}</label>
+			#end
+		</td>
+	</tr>
+
+	#set($index = 1)
+	#foreach($fillin in $fillinList)
+
+	## 题目内容
+	<tr><td class="blankLine"></td></tr>
+	<tr valign="top">
+		<td class="tdRight"><input type="checkbox" name="datacheck" id="04$!{fillin.QSID}" style="border:0" /></td>
+		<td>$!{index}.</td>
+		<td colspan="3">$!{escapeTool.html($!{fillin.QSDESC})}</td>
+	</tr>
+
+	## 图片
+	#if($fillin.REFPIC)
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><img class="imgQuestion" src="$!{ctxtPath}/quesImport/open?id=$!{fillin.REFPIC}" /></td>
+	</tr>
+	#end
+
+	## 知识点
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>知识点：</td>
+		<td colspan="2">$!{escapeTool.html($!{fillin.KNOWLEDGENM})}</td>
+	</tr>
+
+	#set($index = $index + 1)
+	#end
+#end
+
+## 问答题
+#if($essayNumber)
+<input id="NUMOFESSQS" name="NUMOFESSQS" type="hidden" value="$!{testpaperInfo.NUMOFESSQS}" />
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td>$!{essayNumber}、</td>
+		<td colspan="3">问答题（$!{testpaperInfo.NUMOFESSQS}道题，共$!{essayScore}分）</td>
+		<td>
+			<label class="errorMessage">*</label>
+			分值：<input id="questionScore5" name="questionScore5" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFESSQS}" maxlength="3" />
+			## 分值为空时显示错误信息
+			#if($hasQuestionScore5W0010006)
+			<label id="questionScore5W0010006" class="errorMessage">$!{questionScoreW0010006}</label>
+			#end
+			## 分值不是数字时显示错误信息
+			#if($hasQuestionScore5W0010008)
+			<label id="questionScore5W0010008" class="errorMessage">$!{questionScoreW0010008}</label>
+			#end
+			## 分值小于0时显示错误信息
+			#if($hasQuestionScore5W0010017)
+			<label id="questionScore5W0010017" class="errorMessage">$!{questionScoreW0010017}</label>
+			#end
+		</td>
+	</tr>
+
+	#set($index = 1)
+	#foreach($essay in $essayList)
+	
+	## 题目内容
+	<tr><td class="blankLine"></td></tr>
+	<tr valign="top">
+		<td class="tdRight"><input type="checkbox" name="datacheck" id="05$!{essay.QSID}" style="border:0" /></td>
+		<td>$!{index}.</td>
+		<td colspan="3">$!{escapeTool.html($!{essay.QSDESC})}</td>
+	</tr>
+
+	## 图片
+	#if($essay.REFPIC)
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><img class="imgQuestion" src="$!{ctxtPath}/quesImport/open?id=$!{essay.REFPIC}" /></td>
+	</tr>
+	#end
+
+	## 知识点
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>知识点：</td>
+		<td colspan="2">$!{escapeTool.html($!{essay.KNOWLEDGENM})}</td>
+	</tr>
+
+	## 设置分值
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>序号：</td>
+		<td><input style="width:30px;" id="question1_" name="question1_" class="questionIndex" type="text" value="" maxlength="3" /></td>
+	</tr>
+
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>分值：</td>
+		<td colspan="2"><input id="essayScore$!{index}" name="essayScore$!{index}" class="essayScore" type="text" value="$!{testpaperInfo.SCOREOFESSQS}" maxlength="3" /></td>
+	</tr>
+	#set($index = $index + 1)
+	#end
+#end
+
+## 操作题
+#if($operationNumber)
+<input id="NUMOFOPERQS" name="NUMOFOPERQS" type="hidden" value="$!{testpaperInfo.NUMOFOPERQS}" />
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td>$!{operationNumber}、</td>
+		<td colspan="3">操作题（$!{testpaperInfo.NUMOFOPERQS}道题，共$!{operationScore}分）</td>
+		<td>
+			<label class="errorMessage">*</label>
+			分值：<input id="questionScore6" name="questionScore6" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFOPERQS}" maxlength="3" />
+			## 分值为空时显示错误信息
+			#if($hasQuestionScore6W0010006)
+			<label id="questionScore6W0010006" class="errorMessage">$!{questionScoreW0010006}</label>
+			#end
+			## 分值不是数字时显示错误信息
+			#if($hasQuestionScore6W0010008)
+			<label id="questionScore6W0010008" class="errorMessage">$!{questionScoreW0010008}</label>
+			#end
+			## 分值小于0时显示错误信息
+			#if($hasQuestionScore6W0010017)
+			<label id="questionScore6W0010017" class="errorMessage">$!{questionScoreW0010017}</label>
+			#end
+		</td>
+	</tr>
+
+	#set($index = 1)
+	#foreach($operation in $operationList)
+
+	## 题目内容
+	<tr><td class="blankLine"></td></tr>
+	<tr valign="top">
+		<td class="tdRight"><input type="checkbox" name="datacheck" id="06$!{operation.QSID}" style="border:0" /></td>
+		<td>$!{index}.</td>
+		<td colspan="3">$!{escapeTool.html($!{operation.QSDESC})}</td>
+	</tr>
+
+	## 下载
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td colspan="3">
+		<a href="javascript:;" onclick="downloadOper('$!{ctxtPath}/quesImport/operEdit/downloadOper', '$!{operation.QSADDR}', '操作题素材$!{operation.QSID}')">点击下载</a>
+		</td>
+	</tr>
+
+	## 知识点
+	<tr><td class="blankLine10"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>知识点：</td>
+		<td colspan="2">$!{escapeTool.html($!{operation.KNOWLEDGENM})}</td>
+	</tr>
+
+	## 设置分值
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>序号：</td>
+		<td><input style="width:30px;" id="question1_" name="question1_" class="questionIndex" type="text" value="" maxlength="3" /></td>
+	</tr>
+
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td>分值：</td>
+		<td colspan="2"><input id="operationScore$!{index}" name="operationScore$!{index}" class="operationScore" type="text" value="$!{operation.SCORE}" maxlength="3" /></td>
+	</tr>
+
+	#set($index = $index + 1)
+	#end
+#end
+</table>
+</form>
+</body>
+</html>
