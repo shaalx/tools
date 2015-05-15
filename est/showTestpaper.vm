@@ -45,6 +45,7 @@
 	<input name="operAddress" type="text" id="operAddress" value="" style="display:none;"/>
 	<input name="operFileName" type="text" id="operFileName" value="" style="display:none;"/>
 </form>
+
 <div style="height:50px; width:100%; text-align: right;font-size:40px;">
 	#commonPage2()
 </div>
@@ -70,6 +71,16 @@
 ## 乱序失败的消息
 #if($hasDisruptFailedMessage)
 <input id="disruptFailedMessage" type="hidden" value="$!{disruptFailedMessage}" />
+#end
+
+## 更新顺序成功的消息
+#if($hasModIndexSuccessMessage)
+<input id="modIndexSuccessMessage" type="hidden" value="$!{modIndexSuccessMessage}" />
+#end
+
+## 更新顺序失败的消息
+#if($hasModIndexFailedMessage)
+<input id="modIndexFailedMessage" type="hidden" value="$!{modIndexFailedMessage}" />
 #end
 
 ## 保存输入的确认消息
@@ -102,7 +113,10 @@
 <input id="backConfirmMessage" type="hidden" value="$!{backConfirmMessage}" />
 
 <form id="show" action="" method="post">
-
+## 交换题目顺序表单元素
+<input id="qsindex" name="qsindex" value="" style="display:none;" />
+<input id="qsid" name="qsid" value="" style="display:none;" />
+<input id="qstype" name="qstype" value="" style="display:none;" />
 ## 试卷ID
 <input name="testpaperId" type="hidden" value="$!{testpaperId}" />
 
@@ -193,6 +207,7 @@
 		</td>
 	</tr>
 	#set($index = 1)
+	#set($size = $singleChoiceList.size())
 	#foreach($singleChoice in $singleChoiceList)
 	<tr><td class="blankLine"></td></tr>
 	<tr valign="top">
@@ -251,13 +266,15 @@
 		<td colspan="2">$!{escapeTool.html($!{singleChoice.KNOWLEDGENM})}</td>
 	</tr>
 
+	## 设置顺序
+	#if($index<$size)
 	<tr><td class="blankLine"></td></tr>
 	<tr>
 		<td></td>
 		<td></td>
-		<td>序号：</td>
-		<td><input style="width:60px;" id="question1_" name="question1_" class="questionIndex" type="text" value="" maxlength="3" /></td>
+		<td><input qstype="01" qsindex="$!{index}" qsid="$!{singleChoice.QSID}" id="singleChoiceIndexBtn$!{index}" name="singleChoiceIndexBtn$!{index}" class="questionIndex" type="button" value="与下题交换顺序" maxlength="3" /></td>
 	</tr>
+	#end
 
 	#set($index = $index + 1)
 	#end
@@ -288,6 +305,7 @@
 	</tr>
 
 	#set($index = 1)
+	#set($size = $multiChoiceList.size())
 	#foreach($multiChoice in $multiChoiceList)
 
 	## 题目内容
@@ -329,13 +347,15 @@
 		<td colspan="2">$!{escapeTool.html($!{multiChoice.KNOWLEDGENM})}</td>
 	</tr>
 
-	<tr><td class="blankLine10"></td></tr>
+	## 设置顺序
+	#if($index<$size)
+	<tr><td class="blankLine"></td></tr>
 	<tr>
 		<td></td>
 		<td></td>
-		<td valign="top">设置序号：</td>
-		<td colspan="2"><input id="question1_" name="question1_" class="questionIndex" type="text" value="" maxlength="3" /></td>
+		<td><input qstype="02" qsindex="$!{index}" qsid="$!{multiChoice.QSID}" id="multiChoiceIndexBtn$!{index}" name="multiChoiceIndexBtn$!{index}" class="questionIndex" type="button" value="与下题交换顺序" maxlength="3" /></td>
 	</tr>
+	#end
 
 	#set($index = $index + 1)
 	#end
@@ -366,6 +386,7 @@
 	</tr>
 
 	#set($index = 1)
+	#set($size = $judgeList.size())
 	#foreach($judge in $judgeList)
 
 	## 题目内容
@@ -384,6 +405,16 @@
 		<td>知识点：</td>
 		<td colspan="2">$!{escapeTool.html($!{judge.KNOWLEDGENM})}</td>
 	</tr>
+
+	## 设置顺序
+	#if($index<$size)
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td><input qstype="03" qsindex="$!{index}" qsid="$!{judge.QSID}" id="judgeIndexBtn$!{index}" name="judgeIndexBtn$!{index}" class="questionIndex" type="button" value="与下题交换顺序" maxlength="3" /></td>
+	</tr>
+	#end
 
 	#set($index = $index + 1)
 	#end
@@ -414,6 +445,7 @@
 	</tr>
 
 	#set($index = 1)
+	#set($size = $fillinList.size())
 	#foreach($fillin in $fillinList)
 
 	## 题目内容
@@ -443,7 +475,16 @@
 		<td>知识点：</td>
 		<td colspan="2">$!{escapeTool.html($!{fillin.KNOWLEDGENM})}</td>
 	</tr>
-
+	
+	## 设置顺序
+	#if($index<$size)
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td><input qstype="04" qsindex="$!{index}" qsid="$!{fillin.QSID}" id="fillinIndexBtn$!{index}" name="fillinIndexBtn$!{index}" class="questionIndex" type="button" value="与下题交换顺序" maxlength="3" /></td>
+	</tr>
+	#end
 	#set($index = $index + 1)
 	#end
 #end
@@ -456,8 +497,8 @@
 		<td>$!{essayNumber}、</td>
 		<td colspan="3">问答题（$!{testpaperInfo.NUMOFESSQS}道题，共$!{essayScore}分）</td>
 		<td>
-			<label class="errorMessage">*</label>
-			分值：<input id="questionScore5" name="questionScore5" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFESSQS}" maxlength="3" />
+			<!-- <label class="errorMessage">*</label>
+			分值：<input id="questionScore5" name="questionScore5" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFESSQS}" maxlength="3" /> -->
 			## 分值为空时显示错误信息
 			#if($hasQuestionScore5W0010006)
 			<label id="questionScore5W0010006" class="errorMessage">$!{questionScoreW0010006}</label>
@@ -474,6 +515,7 @@
 	</tr>
 
 	#set($index = 1)
+	#set($size = $essayList.size())
 	#foreach($essay in $essayList)
 	
 	## 题目内容
@@ -504,21 +546,23 @@
 		<td colspan="2">$!{escapeTool.html($!{essay.KNOWLEDGENM})}</td>
 	</tr>
 
+	## 设置顺序
+	#if($index<$size)
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td><input qstype="05" qsindex="$!{index}" qsid="$!{essay.QSID}" id="essayIndexBtn$!{index}" name="essayIndexBtn$!{index}" class="questionIndex" type="button" value="与下题交换顺序" maxlength="3" /></td>
+	</tr>
+	#end
+	
 	## 设置分值
 	<tr><td class="blankLine"></td></tr>
 	<tr>
 		<td></td>
 		<td></td>
-		<td>序号：</td>
-		<td><input style="width:30px;" id="question1_" name="question1_" class="questionIndex" type="text" value="" maxlength="3" /></td>
-	</tr>
-
-	<tr><td class="blankLine"></td></tr>
-	<tr>
-		<td></td>
-		<td></td>
 		<td>分值：</td>
-		<td colspan="2"><input id="essayScore$!{index}" name="essayScore$!{index}" class="essayScore" type="text" value="$!{testpaperInfo.SCOREOFESSQS}" maxlength="3" /></td>
+		<td colspan="2"><input id="essayScore$!{index}" name="essayScore$!{index}" type="text" class="questionScore" value="$!{essay.SCORE}" maxlength="3" /></td>
 	</tr>
 	#set($index = $index + 1)
 	#end
@@ -532,8 +576,8 @@
 		<td>$!{operationNumber}、</td>
 		<td colspan="3">操作题（$!{testpaperInfo.NUMOFOPERQS}道题，共$!{operationScore}分）</td>
 		<td>
-			<label class="errorMessage">*</label>
-			分值：<input id="questionScore6" name="questionScore6" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFOPERQS}" maxlength="3" />
+			<!-- <label class="errorMessage">*</label>
+			分值：<input id="questionScore6" name="questionScore6" class="questionScore" type="text" value="$!{testpaperInfo.SCOREOFOPERQS}" maxlength="3" /> -->
 			## 分值为空时显示错误信息
 			#if($hasQuestionScore6W0010006)
 			<label id="questionScore6W0010006" class="errorMessage">$!{questionScoreW0010006}</label>
@@ -550,6 +594,7 @@
 	</tr>
 
 	#set($index = 1)
+	#set($size = $operationList.size())
 	#foreach($operation in $operationList)
 
 	## 题目内容
@@ -579,21 +624,23 @@
 		<td colspan="2">$!{escapeTool.html($!{operation.KNOWLEDGENM})}</td>
 	</tr>
 
+	## 设置顺序
+	#if($index<$size)
+	<tr><td class="blankLine"></td></tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td><input qstype="06" qsindex="$!{index}" qsid="$!{operation.QSID}" id="operationIndexBtn$!{index}" name="operationIndexBtn$!{index}" class="questionIndex" type="button" value="与下题交换顺序" maxlength="3" /></td>
+	</tr>
+	#end
+
 	## 设置分值
 	<tr><td class="blankLine"></td></tr>
 	<tr>
 		<td></td>
 		<td></td>
-		<td>序号：</td>
-		<td><input style="width:30px;" id="question1_" name="question1_" class="questionIndex" type="text" value="" maxlength="3" /></td>
-	</tr>
-
-	<tr><td class="blankLine"></td></tr>
-	<tr>
-		<td></td>
-		<td></td>
 		<td>分值：</td>
-		<td colspan="2"><input id="operationScore$!{index}" name="operationScore$!{index}" class="operationScore" type="text" value="$!{operation.SCORE}" maxlength="3" /></td>
+		<td colspan="2"><input id="operationScore$!{index}" name="operationScore$!{index}" class="questionScore" type="text" value="$!{operation.SCORE}" maxlength="3" /></td>
 	</tr>
 
 	#set($index = $index + 1)
