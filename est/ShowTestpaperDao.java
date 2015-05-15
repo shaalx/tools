@@ -518,7 +518,7 @@ public class ShowTestpaperDao {
 			int update_1 = jdbcTemplate.update(sql_1.toString(), new Object[] {qsindex, userId, testpaperId, qsindex+1, qstype});
 			
 			int update_2 = jdbcTemplate.update(sql_2.toString(), new Object[] {qsindex+1, userId, testpaperId, qsid, qstype});					
-			System.out.println(update_1+update_2);
+			result = (update_1==1 && 1==update_2);
 		} catch (Exception e) {
 			result = false;
 		}
