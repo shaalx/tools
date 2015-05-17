@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!{pageName}</title>
+#parse("inc/include.vm")
+#parse("inc/page.vm")
+#parse("inc/commonPage2.vm")
+<script type="text/javascript" src="$!{ctxtPath}/res/js/012/showHomework.js"></script>
+<link rel="stylesheet" type="text/css" href="$!{ctxtPath}/res/css/012/common.css" />
+</head>
+<body style="margin-left:50">
+<div style="height:50px; width:100%; text-align: right;font-size:40px;">
+	#commonPage2()
+</div>
+## 站点的根路径
+<input id="ctxtPath" type="hidden" value="$!{ctxtPath}" />
+## 确认删除评论的消息
+<input id="deleteConfirmMessage" type="hidden" value="$!{deleteConfirmMessage}" />
+## 确认发表评论的消息
+<input id="insertConfirmMessage" type="hidden" value="$!{insertConfirmMessage}" />
+## 成功发表评论的消息
+#if($hasW0120003)
+<input id="W0120003" type="hidden" value="$!{W0120003}" />
+#end
+#if($hasW0120004)
+<input id="W0120004" type="hidden" value="$!{W0120004}" />
+#end
+#if($hasW0120005)
+<input id="W0120005" type="hidden" value="$!{W0120005}" />
+#end
+<table width="95%"><tr><td id="td10" width="10%"></td><td id="td90" width="90%"></td></tr></table>
+<table width="95%" align="center">
+	<tr>
+		<td width="10%">
+			## 作者头像
+			<img class="authorFace" src="face?type=student&id=$!{homeworkBean.STUDENTNO}" />
+			## 作者姓名
+			<p style="text-align: center;">$!{homeworkBean.NAME}</p>
+		</td>
+		## 作品
+		<td class="hasBorder" height="100" style="text-align:center;">
+			##如果作品是图片
+			#if($isImg)
+				<img id="imgHomework" src="$!{ctxtPath}/homework/open?id=$!{homeworkBean.WORKSID}" />
+			#end
+			##如果作品是动画
+			#if($swfPath)
+				<object id="imgHomework" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0">
+					<param name="SRC" value="$!{swfPath}" />
+					<embed src="$!{swfPath}"></embed>
+				</object>
+			#end
+			##如果作品是其他文件
+			#if($isFile)
+				<a href="javascript:;" onclick="downloadHomework()">点击下载</a>
+			#end
+		</td>
+	</tr>
+	## 作品提交时间
+	<tr><td colspan="2">$!{homeworkBean.CRTDT}</td></tr>
+	## 间距
+	<tr><td style="height:50px;"></td></tr>
+</table>
+<table width="95%" align="center">
+	<tr>
+		## 评分的五角星
+		<td style="width:45%;text-align:right;">
+			<img id="teacherStar1$!{teacherComment.COMMID}" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" />
+			<img id="teacherStar2$!{teacherComment.COMMID}" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" />
+			<img id="teacherStar3$!{teacherComment.COMMID}" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" />
+			<img id="teacherStar4$!{teacherComment.COMMID}" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" />
+			<img id="teacherStar5$!{teacherComment.COMMID}" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" />
+			## 教师评分
+			<input id="teacherGrade$!{teacherComment.COMMID}" type="hidden" value="$!{teacherComment.COMMDRESULT}" />
+			<script>setTeacherGrade("$!{teacherComment.COMMID}")</script>
+		</td>
+		<td style="width:10%;text-align:right;">教师点评：</td>
+		## 教师评论
+		<td style="width:45%;height:50px;border-left:1px solid;border-top:1px solid;border-bottom:1px solid;border-right:1px solid;">$!{teacherComment.COMMDESC}</td>
+	</tr>
+	<tr><td></td><td></td><td style="text-align: right;">$!{teacherComment.CRTDT}</td></tr>
+	## 间距
+	<tr><td style="height:20px;"></td></tr>
+</table>
+## 水平线
+<!-- <hr color="blue" /> -->
+<HR color=#F5F5F5 SIZE=2/>
+<HR color=#DCDCDC SIZE=2/>
+<p></p>
+<table width="95%" align="center" style="border:2px solid;border-color:#D3D3D3;">
+	#set($seq = 0)
+	#set($size = $commentList.size())
+	#foreach($comment in $commentList)
+	<tr>
+		<td style="width:10%;height:10px;"></td>
+		<td style="width:70%;height:10px;"></td>
+		<td style="width:5%;height:10px;"></td>
+		<td style="width:15%;height:10px;"></td>
+	</tr>
+	<tr>
+		<td>
+			## 评论者头像
+			#if ($comment.COMTORSTA == "02")
+			<img class="commentatorFace" src="face?type=student&id=$!{comment.COMTORID}" />
+			#else
+			<img class="commentatorFace" src="face?type=teacher&id=$!{comment.COMTORID}" />
+			#end
+			## 评论者姓名
+			<p style="text-align: center;">$!{comment.NAME}</p>
+		</td>
+		<td colspan="3">$!{comment.COMMDESC}</td>
+	</tr>
+	<tr>
+		<td colspan="2" class="tdRight">
+			<img id="studentStar1$!{seq}" src="$!{ctxtPath}/res/image/012/ClearStarSmall.jpg" width="25" height="25" />
+			<img id="studentStar2$!{seq}" src="$!{ctxtPath}/res/image/012/ClearStarSmall.jpg" width="25" height="25" />
+			<img id="studentStar3$!{seq}" src="$!{ctxtPath}/res/image/012/ClearStarSmall.jpg" width="25" height="25" />
+			<img id="studentStar4$!{seq}" src="$!{ctxtPath}/res/image/012/ClearStarSmall.jpg" width="25" height="25" />
+			<img id="studentStar5$!{seq}" src="$!{ctxtPath}/res/image/012/ClearStarSmall.jpg" width="25" height="25" />
+			<input id="studentGrade$!{seq}" type="hidden" value="$!{comment.COMMDRESULT}" />
+		</td>
+		## “删除”表单
+		<td class="tdCenter">
+			#if($hasDeleteButton)
+				## 删除按钮
+				<input type="button" value="删除" onclick="deleteComment('$!{comment.COMMID}')" />
+			#end
+		</td>
+		## 评论时间
+		<td class="tdCenter">$!{comment.CRTDT}</td>
+	</tr>	
+	#if($seq+1 < $size)
+		<tr>
+			<td colspan="4">
+				<HR color=#DCDCDC SIZE=2/>
+			</td>	
+		</tr>
+	#end
+	#set($seq = $seq + 1)
+	#end
+</table>
+<p></p>
+## 水平线
+#if($seq != 0)
+<HR color=#DCDCDC SIZE=2/>
+<HR color=#F5F5F5 SIZE=2/>
+#end
+<p></p>
+<form id="insertComment" action="" method="post">
+	## 作品ID
+	<input name="homeworkId" type="hidden" value="$!{homeworkBean.WORKSID}" />
+	## 作品名
+	<input name="homeworkName" type="hidden" value="$!{homeworkBean.WORKSNAME}" />
+	## 评论序号
+	<input name="commentId" id="commentId" type="hidden" value="" />
+	## 所属班级ID
+	<input name="classId" type="hidden" value="$!{homeworkBean.CLASSID}" />
+	## 学号
+	<input name="studentNo" type="hidden" value="$!{homeworkBean.STUDENTNO}" />
+	## 来源页面
+	<input name="fromPage" type="hidden" value="$!{fromPage}" />
+	<table width="95%" align="center">
+		<tr>
+			<td width="1%"></td>
+			<td width="78%"></td>
+			<td width="1%"></td>
+			<td width="20%"></td>
+		</tr>
+		<tr>
+			<td class="errorMessage">*</td>
+			<td><textarea id="commentText" name="commentText" rows="8" style="width:100%;">$!{commentText}</textarea></td>
+			<td></td>
+			## 评论内容的长度超出范围时显示错误信息
+			#if($hasCommentTextW0010003)
+			<td id="commentTextW0010003" class="errorMessage">$!{commentTextW0010003}</td>
+			#end
+			## 评论内容为空时显示错误信息
+			#if($hasCommentTextW0010006)
+			<td id="commentTextW0010006" class="errorMessage">$!{commentTextW0010006}</td>
+			#end
+		</tr>
+	</table>
+	<table width="95%" align="center">
+		<tr>
+			<td style="width:1%;height:10px;"></td>
+			<td style="width:39%;height:10px;"></td>
+			<td style="width:40%;height:10px;"></td>
+			<td style="width:10%;height:10px;"></td>
+			<td style="width:10%;height:10px;"></td>
+		</tr>
+		<tr>
+			<td class="errorMessage">*</td>
+			## 评分的五角星
+			<td style="text-align:right;">
+				<a id="commentStar" href="javascript:;" onclick="setCommentGrade('01')"><img id="star1" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" /></a>
+				<a href="javascript:;" onclick="setCommentGrade('02')"><img id="star2" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" /></a>
+				<a href="javascript:;" onclick="setCommentGrade('03')"><img id="star3" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" /></a>
+				<a href="javascript:;" onclick="setCommentGrade('04')"><img id="star4" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" /></a>
+				<a href="javascript:;" onclick="setCommentGrade('05')"><img id="star5" src="$!{ctxtPath}/res/image/012/ClearStar.jpg" width="50" height="50" /></a>
+				<input name="commentGrade" id="commentGrade" type="hidden" value="$!{commentGrade}" />
+			</td>
+			## 评价分数为空时显示错误信息
+			#if($hasCommentGradeW0010006)
+			<td id="commentGradeW0010006" class="errorMessage">$!{commentGradeW0010006}</td>
+			#else
+			<td></td>
+			#end
+			<td style="text-align:right;"><input id="insert" type="button" value="提交" /></td>
+			<td style="text-align:right;"><input id="return" type="button" value="返回" /></td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>
