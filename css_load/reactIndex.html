@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>ReactFire Test Suite</title>
+
+    <!-- React -->
+    <script src="./react/react-with-addons.js"></script>
+    <script src="./react/react.js"></script>
+    <script src="./react/JSXTransformer.js"></script>
+
+    <script type="text/jsx">
+      var Photo = React.createClass({
+        render: function() {
+          return <input type="text" value="REACTJS"/>
+        }
+      });
+
+      React.render(<Photo name="1" />, document.getElementById('content'));
+      React.render(<Photo />, document.getElementById('content2'));
+    </script>
+  </head>
+
+  <body>
+  <h1>nanananana</h1>
+  <div id="content"></div>
+  <div id="content2"></div>
+  </body>
+</html>
