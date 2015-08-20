@@ -1,5 +1,5 @@
 -------------
-go env
+# go env
 
 #1 安装go
 
@@ -60,3 +60,27 @@ ssh-keygen -t rsa -C "account@gmail.com"
 ssh -T git@github.com
 
 如果提示：Hi defnngj You've successfully authenticated, but GitHub does not provide shell access. 说明你连接成功了
+
+
+
+##	go1.5 build @windows
+
+[gcc-TMD](http://sourceforge.net/projects/tdm-gcc/)
+
+### env
+
+export CC=C:\tmd-gcc\bin\gcc.exe
+
+export CGO_ENABLED=1
+
+#build go1.5 with go1.4#
+
+export GOROOT_BOOTSTRAP=go1.4
+
+export GOROOT=...
+
+export GOBIN=...
+
+export GOPATH=...
+
+PATH=%...%:$PATH
