@@ -73,7 +73,7 @@ export CC=C:\tmd-gcc\bin\gcc.exe
 
 export CGO_ENABLED=1
 
-#build go1.5 with go1.4#
+__build go1.5 with go1.4__
 
 export GOROOT_BOOTSTRAP=go1.4
 
@@ -84,3 +84,13 @@ export GOBIN=...
 export GOPATH=...
 
 PATH=%...%:$PATH
+
+##	cross compile
+
+###	build
+
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 ./make.bash
+
+### go build
+
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
